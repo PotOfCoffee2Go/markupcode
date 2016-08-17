@@ -38,8 +38,8 @@ markdown documentation. The site is designed with GitHub gh-pages in mind.
         <button id="sourcename" class="dropbtn">Dropdown</button>
         <div class="dropdown-content">
             <div style="background-color: lightgray;text-align: center;">Docs</div>
-            <a href="./doc/intro.md">intro.md</a>
-            <a href="./doc/credits.md">credits.md</a>
+            <a href="doc/intro.md">intro.md</a>
+            <a href="doc/credits.md">credits.md</a>
             <div style="background-color: lightgray;text-align: center;">Site Code</div>
             <a href="index.html">index.html</a>
             <a href="layout.css">layout.css</a>
@@ -84,7 +84,7 @@ markdown documentation. The site is designed with GitHub gh-pages in mind.
         $('#logo').html(markupcode.image(poc2go.img.logo, '0 0 0 4px', '20px'));
 
         // First page to display in #content
-        markup('../gh-pages/doc/intro.md');
+        markup('doc/intro.md');
 
         // Event handler for when a link is clicked in the #content or dropdown menu
         //  if from this site then mark it up
