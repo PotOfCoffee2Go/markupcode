@@ -49,7 +49,7 @@
             gitHub.repository + '/master';
         gitHub.source.pages = '//raw.githubusercontent.com/' +
             gitHub.username + '/' +
-            gitHub.repository + '/gh-pages';
+            gitHub.repository + '/gh-pages/';
 
         poc2go.markup.github = gitHub;
     }
