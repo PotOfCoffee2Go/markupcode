@@ -41,7 +41,7 @@
     var gitHubIdx = site.hostname.indexOf('github.io');
     if (gitHubIdx > -1) {
         // Add GitHub info to namespace
-        var gitHub = {};
+        var gitHub = {source:{}};
         gitHub.username = site.hostname.substring(0, gitHubIdx - 1);
         gitHub.repository = site.pathname.replace(/\//g, '');
         gitHub.source.master = '//raw.githubusercontent.com/' +
