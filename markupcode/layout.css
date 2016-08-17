@@ -58,6 +58,18 @@ footer img {
 }
 
 /**
+    #### blockquote is similar to github's .
+*/
+blockquote {
+    border-left: 4px solid #dddddd;
+    padding: 0 15px;
+    color: #777777; }
+blockquote > :first-child {
+    margin-top: 0; }
+blockquote > :last-child {
+    margin-bottom: 0; }
+
+/**
     #### Horizontal scroll bar under code blocks
     This prevents lines in code blocks from wrapping
     by placing a horizontal scroll bar below the block
