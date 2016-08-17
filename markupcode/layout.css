@@ -1,0 +1,139 @@
+html {
+    width: 100%;/* {{{image img.coffeering '0 0 0 200px' '100px'}}} */
+    height: 100%;
+    margin: 0 0 0 0;
+    padding: 0 0 0 0;
+    max-width: none;
+}
+
+body {
+    width: 100%;
+    height: 100%;
+    margin: 0 0 0 0;
+    padding: 0 0 0 0;
+    max-width: none;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+/**
+#### Header, main, and footer
+{{{image img.penandpaper '100px 0 0 250px' '50px'}}}
+*/
+header {
+    background-color: #f5dbd3;
+
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 5px 0 5px 0;
+    overflow: hidden;
+    text-align: center;
+    border-style: solid;
+    border-width: 0 0 1px 0;
+}
+main {
+    overflow: auto;
+    flex: 1;
+}
+
+#content {
+    margin: 0 10px 0 10px;
+}
+
+footer {
+    bottom: 0;
+    width: 100%;
+    height: 30px; /* Height of the footer */
+    border-style: solid;
+    border-width: 1px 0 0 0;
+    padding: 4px 0 0 0;
+}
+
+footer img {
+    width: 24px;
+    height: auto;
+    vertical-align: middle;
+}
+
+/**
+    #### Horizontal scroll bar under code blocks
+    This prevents lines in code blocks from wrapping
+    by placing a horizontal scroll bar below the block
+    Is required if line numbering is used - since line
+    numbers do not take wrapping into account.
+*/
+.hljs {
+    overflow-x: auto;
+}
+
+/**
+    #### Line numbers
+*/
+.hljs-line-numbers {
+    text-align: right;
+    border-right: 1px solid #ccc;
+    color: #999;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+/**
+    #### Image parent div styles
+*/
+.pic-parent-div {
+    position: relative;
+    float:left;
+}
+
+/**
+    #### Dropdown Menu - simple example from [w3schools.com](//www.w3schools.com/css/css_dropdowns.asp)
+    Athough, index.html has the show and hiding logic for more control
+*/
+.dropbtn {
+    background-color: black;
+    color: white;
+    padding: 6px;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+}
+
+.dropdown {
+    position: absolute;
+    top:0;
+    left:50px;
+    z-index: 20;
+    display: inline-block;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    font-size: 14px;
+    background-color: #f9f9f9;
+    min-width: 100px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+}
+
+.dropdown-content a {
+    color: black;
+    padding: 6px 6px;
+    text-decoration: none;
+    display: block;
+}
+
+.dropdown-content a:hover {background-color: #f1f1f1}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+.dropdown:hover .dropbtn {
+    background-color: #3e8e41;
+}
+

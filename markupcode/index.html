@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<!---
+This is a simple web site demonstrating how markupcode can be used to show inline
+markdown documentation. The site is designed with GitHub gh-pages in mind.
+--->
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Markup Self</title>
+
+    <!---
+    ### JQuery
+    MarkupCode does not require [jquery](//jquery.com/), but is used by the site
+    --->
+    <script src="//code.jquery.com/jquery-latest.min.js"></script>
+
+    <!--- ### Site layout, styles, and dropdown menu --->
+    <link rel="stylesheet" href="layout.css">
+
+    <!--- ### Code highlight style & script --->
+    <!--- The `pojoaque` highlight style is being used.
+    See [highlight.js demo](https://highlightjs.org/static/demo/) for names of other styles.<br />
+    Remove the link and script if code highlighting is not desired. --->
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.5.0/styles/pojoaque.min.css">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.5.0/highlight.min.js"></script>
+
+    <!--- ### The code markup library --->
+    <script src="//cdnjs.cloudflare.com/ajax/libs/marked/0.3.5/marked.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.5/handlebars.min.js"></script>
+
+    <script src="../src/namespace.js"></script>
+    <script src="../src/hbarhelpers.js"></script>
+    <script src="../src/linenumbers.js"></script>
+    <script src="../src/options.js"></script>
+    <script src="../src/getsource.js"></script>
+    <script src="../src/markupcode.js"></script>
+
+</head>
+<body>
+
+<!--- ### Header contains the logo, menu, and markup option buttons --->
+<header>
+    <div id="logo"></div>
+    <!--- Simple css dropdown menu - styles in [layout.css](./layout.css) --->
+    <div class="dropdown">
+        <button id="sourcename" class="dropbtn">Dropdown</button>
+        <div class="dropdown-content">
+            <div style="background-color: lightgray;text-align: center;">Docs</div>
+            <a href="doc/intro.md">intro.md</a>
+            <a href="doc/credits.md">credits.md</a>
+            <div style="background-color: lightgray;text-align: center;">Site Code</div>
+            <a href="index.html">index.html</a>
+            <a href="layout.css">layout.css</a>
+            <div style="background-color: lightgray;text-align: center;">Markup Code</div>
+            <a href="../src/namespace.js">namespace.js</a>
+            <a href="../src/hbarhelpers.js">hbarhelpers.js</a>
+            <a href="../src/linenumbers.js">linenumbers.js</a>
+            <a href="../src/options.js">options.js</a>
+            <a href="../src/getsource.js">getsource.js</a>
+            <a href="../src/markupcode.js">markupcode.js</a>
+        </div>
+    </div>
+    <!--- Buttons that show when code file displayed - not shown for markdown files --->
+    <div class="top-buttons">
+        <button onclick="return raw();">raw</button>
+        <button onclick="return codeOnly();">code only</button>
+        <button onclick="return markupOnly();">markup only</button>
+        <button onclick="return markedup();">marked up</button>
+    </div>
+</header>
+
+<!--- ### Marked up code files will display in the `#content` div --->
+<main>
+    <div id="content"></div>
+</main>
+
+<!--- ### Footer --->
+<footer>
+    <img src="//potofcoffee2go.github.io/favicon.ico">
+    Presented by <a href="https://github.com/PotOfCoffee2Go" target="_blank">PotOfCoffee2Go</a>
+</footer>
+
+<!--- ### On site loaded -->
+<script>
+    // The `poc2go.markup` namespace is where the markupcode.min.js code lives
+    var markupcode = poc2go.markup;
+
+    $(document).ready(function () {
+        // Show logo
+        $('#logo').html(markupcode.image(poc2go.img.logo, '0 0 0 4px', '20px'));
+
+        // First page to display in #content
+        markup('doc/intro.md');
+
+        // On load, display the menu so the user knows where it is
+        //  when user moves the mouse, remove the display style
+        //  thus allowing the menu to work as usual.
+        //  Remove the mousemove event handler as no longer needed
+        $('.dropdown-content').css({'display':'block'});
+        $('body').mousemove(function () {
+            $('.dropdown-content').css({'display':''});
+            $('body').off('mousemove');
+        });
+
+        // Event handler for when a link is clicked in the #content or dropdown menu
+        //  if from this site then mark it up
+        //  otherwise is link to external site so show in a new tab
+        $('#content, .dropdown-content').on('click', 'a', function () {
+            var filepath = this.href || '';
+            if (filepath.indexOf(window.location.origin) === 0) {
+                markup(filepath);
+                return false;
+            }
+            this.target = '_blank';
+            return true;
+        });
+    });
+</script>
+
+<!--- ### Function to process menu clicks -->
+<script>
+    // Keep track of what file we are displaying in the #content
+    var currentSource;
+
+    // Markup the source file into the #content div
+    // Clear current content
+    // 'poc2go.markup' is the namespace of the markup functions
+    // extract the name of the file and display on the dropdown button
+    // if a markdown file (.md) then hide the buttons across the top
+    // and remember the current url (for use by the buttons across the top)
+    function markup(url) {
+        $('#content').html('');
+        markupcode.source(url, '#content');
+        $('#sourcename').html(url.match(/\/?.*(\/.*$)/)[1].substring(1));
+        if (/md$/.test(url)) { $('.top-buttons').hide(); } else { $('.top-buttons').show(); }
+        currentSource = url;
+        return false;
+    }
+</script>
+
+<!--- ### Functions to process top button clicks -->
+<script>
+    // Clicked for raw display of the current source file
+    function raw() {
+        markupcode.source(currentSource, '#content', {raw: true});
+        return false;
+    }
+
+    // Clicked for code only display of the current source file
+    function codeOnly() {
+        markupcode.source(currentSource, '#content', {hideComment: true});
+        return false;
+    }
+
+    // Clicked for markup only display of the current source file
+    function markupOnly() {
+        markupcode.source(currentSource, '#content', {hideCode: true});
+        return false;
+    }
+
+    // Clicked for default display of the current source file
+    function markedup() {
+        markupcode.source(currentSource, '#content');
+        return false;
+    }
+</script>
+
+<!--- ### Images used when marking up source files --->
+<script>
+
+    poc2go.img = {
+        paperclip: '<div style="margin-left: 22px;height: 4px;">' +
+        '<img src="//res.cloudinary.com/potofcoffee2go/image/upload/gh/paper-clip.svg" ' +
+        'style="position: relative;z-index: 10;width: 50px;"/>' +
+        '</div>',
+        logo: {
+            src: '//res.cloudinary.com/potofcoffee2go/image/upload/gh/penandpaper.svg',
+            href: '//github.com/PotOfCoffee2Go/markupcode/tree/master',
+            style: 'float: left;'
+        },
+        penandpaper: {
+            src: '//res.cloudinary.com/potofcoffee2go/image/upload/gh/penandpaper.svg',
+            href: '//github.com/PotOfCoffee2Go/markupcode/tree/master',
+            style: 'position: absolute;z-index: 10; opacity:0.5;'
+        },
+        beakers: {
+            src: '//res.cloudinary.com/potofcoffee2go/image/upload/gh/beakers.svg',
+            href: '//en.wikipedia.org/wiki/Pixabay',
+            style: 'float: left;'
+        }
+    };
+</script>
+<!---   --->
+</body>
+</html>
