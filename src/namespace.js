@@ -6,6 +6,13 @@
 (function () {
     "use strict";
 
+    this.poc2go = {};
+
+    //  Create an 'a' element so we can get the URL elements of this site
+    var site = document.createElement('a');
+    // This site location without file name
+    site.href = window.location.href.match(/(.*\/).*/)[1];
+
     /**
      ### Initialize the PotOfCoffee2go MarkupCode namespace
      - name: Name of site
@@ -13,34 +20,37 @@
      - github info (when server is GitHub gh-pages)
      {{{img.paperclip}}}
      */
-    this.poc2go = {};
-    poc2go.markup = {
-        name: 'markupcode',
-        site: {
-            host: window.location.hostname,
-            path: window.location.pathname.replace(/\//g,''),
-            source: {
-                master: window.location.origin,
-                pages: window.location.href
-            }
-        },
-        github: null
+
+    poc2go.markup = {name: 'markupcode'};
+
+    poc2go.markup.site = {
+        origin: site.origin,
+        host: site.hostname,
+        pathname: site.pathname,
+        source: {
+            master: site.origin,
+            pages: site.href
+        }
     };
 
-    /// If site is a GitHub gh-pages site then will be getting sources from
+    // Assume site not from GitHub gh-pages
+    poc2go.markup.github = null;
+
+    /// BUT, if site is a GitHub gh-pages site then will be getting sources from
     ///  the project's master and gh-pages branches
-    var gitHubIdx = window.location.hostname.indexOf('github.io');
+    var gitHubIdx = site.hostname.indexOf('github.io');
     if (gitHubIdx > -1) {
         // Add GitHub info to namespace
-        var gitHub = {username: '', repository:'', source:{}};
-        gitHub.username = window.location.hostname.substring(0,gitHubIdx-1);
-        gitHub.repository = window.location.pathname.replace(/\//g,'');
+        var gitHub = {};
+        gitHub.username = site.hostname.substring(0, gitHubIdx - 1);
+        gitHub.repository = site.pathname.replace(/\//g, '');
         gitHub.source.master = '//raw.githubusercontent.com/' +
             gitHub.username + '/' +
             gitHub.repository + '/master';
         gitHub.source.pages = '//raw.githubusercontent.com/' +
             gitHub.username + '/' +
             gitHub.repository + '/gh-pages';
+
         poc2go.markup.github = gitHub;
     }
 

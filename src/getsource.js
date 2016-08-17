@@ -14,7 +14,10 @@
 
     /// ### Markup source code using [Markdown](//daringfireball.net/projects/markdown/)
     /// {{{img.paperclip}}}
+
+    // List of code file extensions which can be parsed for markdown comments
     var typeList = ['js', 'html', 'css', 'json', 'md'];
+    // Regex that gets the extension from a filename
     var extPattern = /\.([0-9a-z]+)(?:[\?#]|$)/i;
 
     var source = function (codeUrl, domelement, options, callback) {
@@ -55,26 +58,24 @@
         //  otherwise source is in the site directories
         var source = ns.github ? ns.github.source : ns.site.source;
 
-        // Assign origin and path to the source code
-        // and change the filepath to be relative
-        var origin = window.location.origin;
-        var pathname = window.location.pathname;
-        if (filepath.indexOf(origin) === 0) {
-            filepath = filepath.replace(origin, '');
-                src = source.master;
+        // Get actual origin and pathname to the source code
+        // and remove origin and pathname assigned by the browser
+        if (filepath.indexOf(ns.site.origin) === 0) {
+            src = source.master;
+            filepath = filepath.replace(ns.site.origin, '');
         }
-        if (filepath.indexOf(pathname) === 0) {
-            filepath = filepath.replace(pathname, '');
-                src = source.pages + '/';
+        if (filepath.indexOf(ns.site.pathname) === 0) {
+            src = source.pages;
+            filepath = filepath.replace(ns.site.pathname, '');
         }
 
-        // Return url to the source code file
+        // Return url with actual origin and pathname to the source code file
         return src + filepath;
     }
 
-    // Get the absolute URL given a relative URL
-    //  Create an 'a' element
-    //  Function that assigns the href to the element and returns it
+    // Get the absolute URL given a relative (or absolute) URL
+    //  Create an 'a' element for
+    //  function that assigns the href to the 'a' element and returns it
     var aHyperlink = document.createElement('a');
     function getAbsoluteUrl(url) {
         aHyperlink.href = url;
