@@ -1,0 +1,15 @@
+{
+  "name": "markupcode",
+  "version": "1.0.0",
+  "description": "Parses Markdown comments from Javascript, stylesheets, and HTML files creating text suitable for processing by Markdown",
+  "main": "Gruntfile.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "PotOfCoffee2Go <kim@lrunit.net>",
+  "license": "MIT",
+  "devDependencies": {
+    "grunt": "^1.0.1",
+    "grunt-contrib-uglify": "^2.0.0"
+  }
+}
