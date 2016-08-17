@@ -72,11 +72,9 @@ markdown documentation. The site is designed with GitHub gh-pages in mind.
     Presented by <a href="https://github.com/PotOfCoffee2Go" target="_blank">PotOfCoffee2Go</a>
 </footer>
 
-<!--- ### On site loaded
-
-> The `poc2go.markup` namespace is where the markupcode.min.js code lives
--->
+<!--- ### On site loaded -->
 <script>
+    // The `poc2go.markup` namespace is where the markupcode.min.js code lives
     var markupcode = poc2go.markup;
 
     $(document).ready(function () {
@@ -85,6 +83,16 @@ markdown documentation. The site is designed with GitHub gh-pages in mind.
 
         // First page to display in #content
         markup('doc/intro.md');
+
+        // On load, display the menu so the user knows where it is
+        //  when user moves the mouse, remove the display style
+        //  thus allowing the menu to work as usual.
+        //  Remove the mousemove event handler as no longer needed
+        $('.dropdown-content').css({'display':'block'});
+        $('body').mousemove(function () {
+            $('.dropdown-content').css({'display':''});
+            $('body').off('mousemove');
+        });
 
         // Event handler for when a link is clicked in the #content or dropdown menu
         //  if from this site then mark it up
