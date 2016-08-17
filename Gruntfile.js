@@ -13,24 +13,7 @@ module.exports = function (grunt) {
         config: config,
         pkg: config.pkg,
         bower: grunt.file.readJSON('./.bowerrc'),
-        /*
-        copy: {
-            dist: {
-                files: [{
-                    expand: true,
-                    cwd: '<%= config.app %>/_lib/font-awesome',
-                    src: 'css/font-awesome.min.css',
-                    dest: '<%= config.dist %>'
-                },
-                    {
-                        expand: true,
-                        cwd: '<%= config.app %>/_lib/font-awesome',
-                        src: 'fonts/*',
-                        dest: '<%= config.dist %>'
-                    }]
-            }
-        },
-        */
+
         uglify: {
             options: {
                 banner: '/*! <%= pkg.name %> lib - v<%= pkg.version %> -' +
@@ -53,11 +36,7 @@ module.exports = function (grunt) {
         }
     });
 
-    // grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-contrib-uglify');
 
-    grunt.registerTask('default', [
- //       'copy',
-        'uglify'
-    ]);
+    grunt.registerTask('default', ['uglify']);
 };
