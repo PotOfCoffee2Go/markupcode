@@ -87,7 +87,7 @@ markdown documentation. The site is designed with GitHub gh-pages in mind.
 
     $(document).ready(function () {
         // Show logo
-        $('#logo').html(markupcode.image(poc2go.img.logo, '0 0 0 4px', '20px'));
+        $('#logo').html(markupcode.image(markupcode.img.logo, '20px', '0 0 0 4px'));
 
         // First page to display in #content
         markup('doc/intro.md');
@@ -163,7 +163,9 @@ markdown documentation. The site is designed with GitHub gh-pages in mind.
 <!--- ### Images used when marking up source files --->
 <script>
 
-    poc2go.img = {
+    markupcode.img = {
+        poc2go: '<img src="//potofcoffee2go.github.io/favicon.ico"' +
+        ' style="width: 24px;height: 24px;vertical-align: middle;">',
         paperclip: '<div style="margin-left: 22px;height: 4px;">' +
         '<img src="//res.cloudinary.com/potofcoffee2go/image/upload/gh/paper-clip.svg" ' +
         'style="position: relative;z-index: 10;width: 50px;"/>' +
@@ -182,6 +184,11 @@ markdown documentation. The site is designed with GitHub gh-pages in mind.
             src: '//res.cloudinary.com/potofcoffee2go/image/upload/gh/beakers.svg',
             href: '//en.wikipedia.org/wiki/Pixabay',
             style: 'float: left;'
+        },
+        beaker: {
+            src: '//res.cloudinary.com/potofcoffee2go/image/upload/gh/beaker.svg',
+            href: '//en.wikipedia.org/wiki/Pixabay',
+            style: 'float:right;'
         }
     };
 </script>

@@ -1,5 +1,5 @@
 html {
-    width: 100%;/* {{{image img.coffeering '0 0 0 200px' '100px'}}} */
+    width: 100%;/* {{{image img.coffeering '100px' '0 0 0 200px'}}} */
     height: 100%;
     margin: 0 0 0 0;
     padding: 0 0 0 0;
@@ -20,7 +20,7 @@ body {
 
 /**
 #### Header, main, and footer
-{{{image img.penandpaper '100px 0 0 250px' '50px'}}}
+{{{image img.penandpaper '50px' '100px 0 0 250px'}}}
 */
 header {
     background-color: #f5dbd3;

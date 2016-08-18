@@ -1,7 +1,7 @@
 /**
  {{{img.poc2go}}} Created by PotOfCoffee2Go on 7/6/2016.
  */
-/// {{{image img.beakers '26px 15px 15px 0' '80px'}}}
+/// {{{image img.beakers '80px' '26px 15px 15px 0'}}}
 /**
  ## Format code files to markdown
  Text from a `.js`, `.html`, `.css`, `.json` files is parsed and formatted for presentation
@@ -241,7 +241,7 @@
 
             /// ----
             /// Hide Comments
-            /// {{{ image img.beaker '0 0 0 0' '180px' }}}
+            /// {{{ image img.beaker '180px' }}}
             i = flags.length;
             if (opt.hideComment) {
                 while (i--) {
@@ -336,7 +336,7 @@
         var handled = out.lines.join('\n');
         if (!opt.raw) {
             var compiled = Handlebars.compile(out.lines.join('\n'));
-            handled = compiled(poc2go);
+            handled = compiled(ns);
         }
         var markedup = marked(handled);
 

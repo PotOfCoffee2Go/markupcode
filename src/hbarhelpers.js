@@ -4,15 +4,9 @@
  Handlebars.
 
  Handlebars example
-**\{\{\{ image img.pretty_pic '0 0 0 0' '80px' \}\}\}**
-
- The '0 0 0 0' is the margin style for positioning the
- image on the document relative to the location of the
- Handlebars entry. '80px' is the image width (the
- height is automatic keeping to the image aspect ratio)
+**\{\{\{ image img.pretty_pic '80px' '0 0 0 10px' \}\}\}**
 
  `img.pretty_pic` is object with the following fields :
-
  <pre><samp>
  img.pretty_pic = {
    src: url of image,
@@ -20,6 +14,11 @@
    style: optional image style override
  }
  </samp></pre>
+
+ '80px' is the image width (the height is automatic keeping
+ to the image aspect ratio). The '0 0 0 10px' is the margin style
+ for positioning the image on the document relative to the
+ location of the Handlebars entry.
 
  */
 
@@ -35,8 +34,10 @@
      styled position: absolute for flexibility of overlaying image
      above/below text.
      */
-    function image(pic, margin, width) {
+    function image(pic, width, margin) {
         if (pic == null) return '';
+        // Set margin to default when not passed as a parameter
+        margin = typeof margin === 'string' ? margin : '0 0 0 0';
         var src = pic.src;
         var ref = pic.href;
         var style = pic.style || '';
@@ -87,8 +88,8 @@
     }
 
     /// Register the helpers with Handlebars
-    Handlebars.registerHelper('image', function (pic, margin, width){
-        return new Handlebars.SafeString(image(pic, margin, width));
+    Handlebars.registerHelper('image', function (pic, width, margin){
+        return new Handlebars.SafeString(image(pic, width, margin));
     });
     Handlebars.registerHelper('image-inline', function (pic, width){
         return new Handlebars.SafeString(imageInline(pic, width));

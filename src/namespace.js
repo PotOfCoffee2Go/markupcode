@@ -24,7 +24,7 @@
     poc2go.markup = {name: 'markupcode'};
 
     poc2go.markup.site = {
-        origin: site.origin,
+        origin: window.location.origin,
         host: site.hostname,
         pathname: site.pathname,
         source: {
