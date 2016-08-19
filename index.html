@@ -2,6 +2,7 @@
 <!---
 This is a simple web site demonstrating how markupcode can be used to show inline
 markdown documentation. The site is designed with GitHub gh-pages in mind.
+{{{image img.penandpaper '50px' '80px 0 0 250px'}}}
 --->
 <html lang="en">
 <head>
@@ -25,7 +26,8 @@ markdown documentation. The site is designed with GitHub gh-pages in mind.
     <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.5.0/highlight.min.js"></script>
 
     <!--- ### The code markup library --->
-    <script src="//rawgit.com/potofcoffee2go/markupcode/master/dist/js/markupcode.min.js"></script>
+    <!--<script src="//rawgit.com/potofcoffee2go/markupcode/master/dist/js/markupcode.min.js"></script>-->
+    <script src="/dist/js/markupcode.min.js"></script>
 
 </head>
 <body>
@@ -38,18 +40,18 @@ markdown documentation. The site is designed with GitHub gh-pages in mind.
         <button id="sourcename" class="dropbtn">Dropdown</button>
         <div class="dropdown-content">
             <div style="background-color: lightgray;text-align: center;">Docs</div>
-            <a href="doc/intro.md">intro.md</a>
-            <a href="doc/credits.md">credits.md</a>
+            <a href="?file=doc/intro.md">intro.md</a>
+            <a href="?file=doc/credits.md">credits.md</a>
             <div style="background-color: lightgray;text-align: center;">Site Code</div>
-            <a href="index.html">index.html</a>
-            <a href="layout.css">layout.css</a>
+            <a href="?file=index.html">index.html</a>
+            <a href="?file=layout.css#line-numbers">layout.css</a>
             <div style="background-color: lightgray;text-align: center;">Markup Code</div>
-            <a href="../src/namespace.js">namespace.js</a>
-            <a href="../src/hbarhelpers.js">hbarhelpers.js</a>
-            <a href="../src/linenumbers.js">linenumbers.js</a>
-            <a href="../src/options.js">options.js</a>
-            <a href="../src/getsource.js">getsource.js</a>
-            <a href="../src/markupcode.js">markupcode.js</a>
+            <a href="?file=../src/namespace.js">namespace.js</a>
+            <a href="?file=../src/hbarhelpers.js">hbarhelpers.js</a>
+            <a href="?file=../src/linenumbers.js">linenumbers.js</a>
+            <a href="?file=../src/options.js">options.js</a>
+            <a href="?file=../src/getsource.js">getsource.js</a>
+            <a href="?file=../src/markupcode.js">markupcode.js</a>
         </div>
     </div>
     <!--- Buttons that show when code file displayed - not shown for markdown files --->
@@ -82,7 +84,12 @@ markdown documentation. The site is designed with GitHub gh-pages in mind.
         $('#logo').html(markupcode.image(markupcode.img.logo, '20px', '0 0 0 4px'));
 
         // First page to display in #content
-        markup('doc/intro.md');
+        if (window.location.href.indexOf('?') > -1) {
+            markup(window.location.search + window.location.hash);
+        }
+        else {
+            markup('?file=doc/intro.md');
+        }
 
         // On load, display the menu for a few seconds
         // so the user knows where it is
@@ -118,7 +125,7 @@ markdown documentation. The site is designed with GitHub gh-pages in mind.
     function markup(url) {
         $('#content').html('');
         markupcode.source(url, '#content');
-        $('#sourcename').html(url.match(/\/?.*(\/.*$)/)[1].substring(1));
+        //$('#sourcename').html(url.match(/\/?.*(\/.*$)/)[1].substring(1));
         if (/md$/.test(url)) { $('.top-buttons').hide(); } else { $('.top-buttons').show(); }
         currentSource = url;
         return false;
@@ -180,6 +187,16 @@ markdown documentation. The site is designed with GitHub gh-pages in mind.
         beaker: {
             src: '//res.cloudinary.com/potofcoffee2go/image/upload/gh/beaker.svg',
             href: '//en.wikipedia.org/wiki/Pixabay',
+            style: 'float:right;'
+        },
+        coffeering: {
+            src: '//res.cloudinary.com/potofcoffee2go/image/upload/gh/coffeering.svg',
+            href: '//openclipart.org/detail/185884/coffee-ring',
+            style: 'position: absolute;z-index: 10; opacity:0.5;'
+        },
+        redbacteria: {
+            src: '//res.cloudinary.com/potofcoffee2go/image/upload/gh/redbacteria.svg',
+            href: '//openclipart.org/detail/162835/funny-red-bacteria',
             style: 'float:right;'
         }
     };
