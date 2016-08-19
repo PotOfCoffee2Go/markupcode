@@ -15,14 +15,23 @@
     /// ### Markup source code using [Markdown](//daringfireball.net/projects/markdown/)
     /// {{{img.paperclip}}}
 
+    // aHyperlink is used to get the parts of a URL
+    var aHyperlink = document.createElement('a');
     // List of code file extensions which can be parsed for markdown comments
     var typeList = ['js', 'html', 'css', 'json', 'md'];
     // Regex that gets the extension from a filename
     var extPattern = /\.([0-9a-z]+)(?:[\?#]|$)/i;
 
-    var source = function (codeUrl, domelement, options, callback) {
+    var source = function (url, domelement, options, callback) {
 
-        codeUrl = getCodeUrl(codeUrl);
+        aHyperlink.href = url;
+        var href = aHyperlink.href;
+        var hash = aHyperlink.hash;
+        var queryParams = getQueryParameters(aHyperlink);
+
+        // Get the actual URL to the source code
+        aHyperlink.href = ns.site.origin + ns.site.pathname + queryParams.file;
+        var codeUrl = getCodeUrl(aHyperlink.href);
 
         var extension = codeUrl.match(extPattern);
         if (typeList.indexOf(extension[1]) === -1) {
@@ -34,6 +43,11 @@
             if (xmlhttp.readyState == XMLHttpRequest.DONE) {
                 if (xmlhttp.status == 200) {
                     ns.markup(xmlhttp.responseText.split('\n'), domelement, extension[1], options, function (err, out) {
+                        if (window.location.href !== href) {
+                            window.history.pushState({}, '', href);
+                        }
+                        window.location.hash = '';  // reset hash
+                        window.location.hash = hash;
                         if (callback) callback(err, out);
                     })
                 }
@@ -48,10 +62,8 @@
 
     /// ### Get source from localhost or GitHub if server not localhost
     // Determine location of source code
-    function getCodeUrl(filepath) {
+    function getCodeUrl(filepath, getRelative) {
         var src = '';
-        // If URL is relative make it absolute so can parse it
-        filepath = getAbsoluteUrl(filepath);
 
         // Links to the source code
         //  when server is github source is on master and/or gh-pages branches
@@ -70,16 +82,19 @@
         }
 
         // Return url with actual origin and pathname to the source code file
+        if (getRelative){
+            return filepath;
+        }
         return src + filepath;
     }
 
-    // Get the absolute URL given a relative (or absolute) URL
-    //  Create an 'a' element for
-    //  function that assigns the href to the 'a' element and returns it
-    var aHyperlink = document.createElement('a');
-    function getAbsoluteUrl(url) {
-        aHyperlink.href = url;
-        return aHyperlink.href;
+    //
+    function getQueryParameters(hyperlink) {
+        return (hyperlink.search).replace(/(^\?)/, '')
+            .split("&")
+            .map(function (n) {
+                return n = n.split("="), this[n[0]] = n[1], this
+            }.bind({}))[0];
     }
 
     // Add to namespace

@@ -8,6 +8,9 @@
  as a web page. Markdown and most HTML tags are allowed in the comments, Markdown
  should take care of most your needs.
 
+ {{{image img.redbacteria '60px' '-10px 0 0 0'}}}
+
+
  > Excuse the over documentation of this code. It should be re-written using regex expressions
  so commented heavily to assist in that rewrite - time permitting.
  */
