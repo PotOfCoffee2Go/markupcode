@@ -6,12 +6,13 @@
 (function () {
     "use strict";
 
-    this.poc2go = {};
+    if (typeof this.poc2go === 'undefined') this.poc2go = {};
 
     //  Create an 'a' element so we can get the URL elements of this site
     var site = document.createElement('a');
     // This site location without file name
-    site.href = window.location.href.match(/(.*\/).*/)[1];
+    //site.href = window.location.href.match(/(.*\/).*/)[1];
+    site.href = window.location.href;
 
     /**
      ### Initialize the PotOfCoffee2go MarkupCode namespace
@@ -21,20 +22,23 @@
      {{{img.paperclip}}}
      */
 
-    poc2go.markup = {name: 'markupcode'};
+    var ns = poc2go.markup = {name: 'markupcode'};
 
-    poc2go.markup.site = {
+    ns.site = {
         origin: window.location.origin,
         host: site.hostname,
         pathname: site.pathname,
         source: {
             master: site.origin,
             pages: site.href
+                .replace(site.search,'')
+                .replace(site.hash,'')
+                .match(/(.*\/).*/)[1]
         }
     };
 
     // Assume site not from GitHub gh-pages
-    poc2go.markup.github = null;
+    ns.github = null;
 
     /// BUT, if site is a GitHub gh-pages site then will be getting sources from
     ///  the project's master and gh-pages branches
@@ -51,7 +55,7 @@
             gitHub.username + '/' +
             gitHub.repository + '/gh-pages/';
 
-        poc2go.markup.github = gitHub;
+        ns.github = gitHub;
     }
 
 
@@ -66,5 +70,35 @@
             }
         });
     }
+
+    /// ### Get source code location (URL) for either localhost or GitHub branch
+    // aHyperlink is used to get the parts of a URL
+    var aHyperlink = document.createElement('a');
+    // Determine location of source code
+    ns.getCodeUrl = function getCodeUrl(relativeFilepath) {
+        var src = '';
+        aHyperlink.href = ns.site.origin + ns.site.pathname + relativeFilepath;
+        var filepath = aHyperlink.href;
+
+        // Links to the source code
+        //  when server is github source is on master and/or gh-pages branches
+        //  otherwise source is in the site directories
+        var source = ns.github ? ns.github.source : ns.site.source;
+
+        // Get actual origin and pathname to the source code
+        // and remove origin and pathname assigned by the browser
+        if (filepath.indexOf(ns.site.origin) === 0) {
+            src = source.master;
+            filepath = filepath.replace(ns.site.origin, '');
+        }
+        if (filepath.indexOf(ns.site.pathname) === 0) {
+            src = source.pages;
+            filepath = filepath.replace(ns.site.pathname, '');
+        }
+
+        // Return url with actual origin and pathname to the source code file
+        return src + filepath;
+    }
+
 
 }).call(this);

@@ -47,18 +47,18 @@ markdown documentation. The site is designed with GitHub gh-pages in mind.
         <button id="sourcename" class="dropbtn">Dropdown</button>
         <div class="dropdown-content">
             <div style="background-color: lightgray;text-align: center;">Docs</div>
-            <a href="?file=doc/intro.md">intro.md</a>
-            <a href="?file=doc/credits.md">credits.md</a>
+            <a href="?markup=doc/intro.md">intro.md</a>
+            <a href="?markup=doc/credits.md">credits.md</a>
             <div style="background-color: lightgray;text-align: center;">Site Code</div>
-            <a href="?file=index.html">index.html</a>
-            <a href="?file=layout.css#line-numbers">layout.css</a>
+            <a href="?markup=index.html">index.html</a>
+            <a href="?markup=layout.css#line-numbers">layout.css</a>
             <div style="background-color: lightgray;text-align: center;">Markup Code</div>
-            <a href="?file=../src/namespace.js">namespace.js</a>
-            <a href="?file=../src/hbarhelpers.js">hbarhelpers.js</a>
-            <a href="?file=../src/linenumbers.js">linenumbers.js</a>
-            <a href="?file=../src/options.js">options.js</a>
-            <a href="?file=../src/getsource.js">getsource.js</a>
-            <a href="?file=../src/markupcode.js">markupcode.js</a>
+            <a href="?markup=../src/namespace.js">namespace.js</a>
+            <a href="?markup=../src/hbarhelpers.js">hbarhelpers.js</a>
+            <a href="?markup=../src/linenumbers.js">linenumbers.js</a>
+            <a href="?markup=../src/options.js">options.js</a>
+            <a href="?markup=../src/getsource.js">getsource.js</a>
+            <a href="?markup=../src/markupcode.js">markupcode.js</a>
         </div>
     </div>
     <!--- Buttons that show when code file displayed - not shown for markdown files --->
@@ -95,7 +95,7 @@ markdown documentation. The site is designed with GitHub gh-pages in mind.
             markup(window.location.search + window.location.hash);
         }
         else {
-            markup('?file=doc/intro.md');
+            markup('?markup=doc/intro.md');
         }
 
         // On load, display the menu for a few seconds
@@ -105,14 +105,15 @@ markdown documentation. The site is designed with GitHub gh-pages in mind.
 
         // Event handler for when a link is clicked in the #content or dropdown menu
         //  if from this site then mark it up
-        //  otherwise is link to external site so show in a new tab
         $('#content, .dropdown-content').on('click', 'a', function () {
             var filepath = this.href || '';
             if (filepath.indexOf(window.location.origin) === 0) {
                 markup(filepath);
                 return false;
             }
-            this.target = '_blank';
+            // otherwise is link to external site
+            //  *uncomment to show external sites in a new tab*
+            // this.target = '_blank';
             return true;
         });
     });
@@ -121,7 +122,7 @@ markdown documentation. The site is designed with GitHub gh-pages in mind.
 <!--- ### Function to process menu clicks -->
 <script>
     // Keep track of what file we are displaying in the #content
-    var currentSource;
+    var currentQString;
 
     // Markup the source file into the #content div
     // Clear current content
@@ -131,10 +132,8 @@ markdown documentation. The site is designed with GitHub gh-pages in mind.
     // and remember the current url (for use by the buttons across the top)
     function markup(url) {
         $('#content').html('');
-        markupcode.source(url, '#content');
-        //$('#sourcename').html(url.match(/\/?.*(\/.*$)/)[1].substring(1));
-        if (/md$/.test(url)) { $('.top-buttons').hide(); } else { $('.top-buttons').show(); }
-        currentSource = url;
+        markupcode.source(url, '#content', {}, updateBrowser);
+        currentQString = url;
         return false;
     }
 </script>
@@ -143,27 +142,75 @@ markdown documentation. The site is designed with GitHub gh-pages in mind.
 <script>
     // Clicked for raw display of the current source file
     function raw() {
-        markupcode.source(currentSource, '#content', {raw: true});
+        markupcode.source(currentQString, '#content', {raw: true}, updateBrowser);
         return false;
     }
 
     // Clicked for code only display of the current source file
     function codeOnly() {
-        markupcode.source(currentSource, '#content', {hideComment: true});
+        markupcode.source(currentQString, '#content', {hideComment: true}, updateBrowser);
         return false;
     }
 
     // Clicked for markup only display of the current source file
     function markupOnly() {
-        markupcode.source(currentSource, '#content', {hideCode: true});
+        markupcode.source(currentQString, '#content', {hideCode: true}, updateBrowser);
         return false;
     }
 
     // Clicked for default display of the current source file
     function markedup() {
-        markupcode.source(currentSource, '#content');
+        markupcode.source(currentQString, '#content', {}, updateBrowser);
         return false;
     }
+</script>
+
+<script>
+    /// ### Update browser
+    function updateBrowser(err, input, output) {
+        // Change name on the menu header
+        $('#sourcename').html(input.qstring.match(/=([^#]*)/)[1]);
+
+        // Hide/Show top buttons based on file extension
+        if (/md$/.test(input.qstring)) {
+            $('.top-buttons').hide();
+        }
+        else {
+            $('.top-buttons').show();
+        }
+
+        // If browser is already at the source code location
+        //  replace the history of that location
+        //  otherwise push the new location
+        if (window.location.href === input.href) {
+            window.history.replaceState(input, null, input.href);
+        }
+        else {
+            window.history.pushState(input, null, input.href);
+        }
+
+        // If we have a location hash then scroll to it
+        //  otherwise scroll to the top
+        if (input.hash.length) {
+            document.getElementById(input.hash.replace('#', '')).scrollIntoView(true);
+        }
+        else {
+            document.getElementsByTagName("main")[0].scrollTop = 0;
+        }
+    }
+
+    // User clicked back/forward buttons on browser bar
+    window.onpopstate = function (event) {
+        if (event.state) {
+            // Markup using the state information pushed onto history
+            markupcode.source(
+                    event.state.qstring + event.state.hash,
+                    event.state.domelement,
+                    event.state.options,
+                    updateBrowser
+            );
+        }
+    };
 </script>
 
 <!--- ### Images used when marking up source files --->
@@ -208,6 +255,7 @@ markdown documentation. The site is designed with GitHub gh-pages in mind.
         }
     };
 </script>
+
 <!---   --->
 </body>
 </html>

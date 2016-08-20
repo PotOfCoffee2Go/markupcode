@@ -22,33 +22,36 @@
     // Regex that gets the extension from a filename
     var extPattern = /\.([0-9a-z]+)(?:[\?#]|$)/i;
 
-    var source = function (url, domelement, options, callback) {
+    var source = function (qstring, domelement, options, callback) {
 
-        aHyperlink.href = url;
+        aHyperlink.href = qstring;
         var href = aHyperlink.href;
         var hash = aHyperlink.hash;
-        var queryParams = getQueryParameters(aHyperlink);
 
         // Get the actual URL to the source code
-        aHyperlink.href = ns.site.origin + ns.site.pathname + queryParams.file;
-        var codeUrl = getCodeUrl(aHyperlink.href);
+        var queryParams = getQueryParameters(aHyperlink);
+        var codeUrl = ns.getCodeUrl(queryParams.markup);
 
         var extension = codeUrl.match(extPattern);
         if (typeList.indexOf(extension[1]) === -1) {
             throw new Error('markupcode: unsupported file type - extension ' + extension[1]);
         }
 
+        // Get the source code text and mark it up
         var xmlhttp = new XMLHttpRequest();
         xmlhttp.onreadystatechange = function () {
             if (xmlhttp.readyState == XMLHttpRequest.DONE) {
                 if (xmlhttp.status == 200) {
-                    ns.markup(xmlhttp.responseText.split('\n'), domelement, extension[1], options, function (err, out) {
-                        if (window.location.href !== href) {
-                            window.history.pushState({}, '', href);
-                        }
-                        window.location.hash = '';  // reset hash
-                        window.location.hash = hash;
-                        if (callback) callback(err, out);
+                    ns.markup(xmlhttp.responseText.split('\n'), domelement, extension[1], options, function (err, output) {
+                        var input = {
+                            href: href,
+                            qstring: aHyperlink.search,
+                            hash: hash,
+                            domelement: domelement,
+                            options: output.options
+                        };
+                        console.log(input);
+                        if (callback) callback(err, input, output);
                     })
                 }
                 else {
@@ -60,35 +63,7 @@
         xmlhttp.send();
     };
 
-    /// ### Get source from localhost or GitHub if server not localhost
-    // Determine location of source code
-    function getCodeUrl(filepath, getRelative) {
-        var src = '';
-
-        // Links to the source code
-        //  when server is github source is on master and/or gh-pages branches
-        //  otherwise source is in the site directories
-        var source = ns.github ? ns.github.source : ns.site.source;
-
-        // Get actual origin and pathname to the source code
-        // and remove origin and pathname assigned by the browser
-        if (filepath.indexOf(ns.site.origin) === 0) {
-            src = source.master;
-            filepath = filepath.replace(ns.site.origin, '');
-        }
-        if (filepath.indexOf(ns.site.pathname) === 0) {
-            src = source.pages;
-            filepath = filepath.replace(ns.site.pathname, '');
-        }
-
-        // Return url with actual origin and pathname to the source code file
-        if (getRelative){
-            return filepath;
-        }
-        return src + filepath;
-    }
-
-    //
+    // Returns the querystring from a element href
     function getQueryParameters(hyperlink) {
         return (hyperlink.search).replace(/(^\?)/, '')
             .split("&")
