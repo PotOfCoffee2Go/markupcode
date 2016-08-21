@@ -35,7 +35,7 @@ markdown documentation. The site is designed with GitHub gh-pages in mind.
 <!--- ### Header contains the logo, menu, and markup option buttons --->
 <header>
     <div id="logo"></div>
-    <!--- Simple css dropdown menu - styles in [layout.css](./layout.css) --->
+    <!--- Simple css dropdown menu - styles in [layout.css](?markup=layout.css) --->
     <div class="dropdown">
         <button id="sourcename" class="dropbtn">Dropdown</button>
         <div class="dropdown-content">
@@ -91,16 +91,15 @@ markdown documentation. The site is designed with GitHub gh-pages in mind.
             markup('?markup=doc/intro.md');
         }
 
-        // On load, display the menu for a few seconds
-        // so the user knows where it is
+        // Display the menu for a few moments so the user knows where it is
         $('.dropdown-content').css({'display': 'block'});
         setTimeout(function () {$('.dropdown-content').css({'display': ''});}, 1500);
 
         // Event handler for when a link is clicked in the #content or dropdown menu
-        //  if from this site then mark it up
+        //  if is for a markup then mark it up
         $('#content, .dropdown-content').on('click', 'a', function () {
             var filepath = this.href || '';
-            if (filepath.indexOf(window.location.origin) === 0) {
+            if (filepath.indexOf('markup=') > -1) {
                 markup(filepath);
                 return false;
             }
@@ -114,19 +113,21 @@ markdown documentation. The site is designed with GitHub gh-pages in mind.
 
 <!--- ### Function to process menu clicks -->
 <script>
-    // Keep track of what file we are displaying in the #content
-    var currentQString;
+    // Keep track of the state of each markup code page
+    var currentUrl = window.location.href;
+    var markupStates = {};
+    markupStates[currentUrl] = {href: window.location.href, scrollTop: 0};
 
+    // File we are displaying in the #content
+    var currentPage;
+
+    // Remember the where the user scrolled
     // Markup the source file into the #content div
-    // Clear current content
-    // 'poc2go.markup' is the namespace of the markup functions
-    // extract the name of the file and display on the dropdown button
-    // if a markdown file (.md) then hide the buttons across the top
-    // and remember the current url (for use by the buttons across the top)
+    // Remember the current url (for use by the top buttons in the header)
     function markup(url) {
-        $('#content').html('');
+        markupStates[currentUrl].scrollTop = $('main').scrollTop();
         markupcode.source(url, '#content', {}, updateBrowser);
-        currentQString = url;
+        currentPage = url;
         return false;
     }
 </script>
@@ -135,34 +136,42 @@ markdown documentation. The site is designed with GitHub gh-pages in mind.
 <script>
     // Clicked for raw display of the current source file
     function raw() {
-        markupcode.source(currentQString, '#content', {raw: true}, updateBrowser);
+        markupcode.source(currentPage, '#content', {raw: true}, updateBrowser);
         return false;
     }
 
     // Clicked for code only display of the current source file
     function codeOnly() {
-        markupcode.source(currentQString, '#content', {hideComment: true}, updateBrowser);
+        markupcode.source(currentPage, '#content', {hideComment: true}, updateBrowser);
         return false;
     }
 
     // Clicked for markup only display of the current source file
     function markupOnly() {
-        markupcode.source(currentQString, '#content', {hideCode: true}, updateBrowser);
+        markupcode.source(currentPage, '#content', {hideCode: true}, updateBrowser);
         return false;
     }
 
     // Clicked for default display of the current source file
     function markedup() {
-        markupcode.source(currentQString, '#content', {}, updateBrowser);
+        markupcode.source(currentPage, '#content', {}, updateBrowser);
         return false;
     }
 </script>
 
 <script>
-    /// ### Update browser
+    /// ### Update browser and marked up page states
     function updateBrowser(err, input, output) {
+        // Add page to history
+        if (typeof markupStates[input.href] === 'undefined') {
+            markupStates[input.href] = {href: input.href, scrollTop: input.scrollTop};
+            window.history.pushState(input, null, input.href);
+        }
+        markupStates[input.href].options = input.options;
+
         // Change name on the menu header
         $('#sourcename').html(input.qstring.match(/=([^#]*)/)[1]);
+        document.title = input.qstring.match(/=([^#]*)/)[1];
 
         // Hide/Show top buttons based on file extension
         if (/md$/.test(input.qstring)) {
@@ -171,37 +180,20 @@ markdown documentation. The site is designed with GitHub gh-pages in mind.
         else {
             $('.top-buttons').show();
         }
-
-        // If browser is already at the source code location
-        //  replace the history of that location
-        //  otherwise push the new location
-        if (window.location.href === input.href) {
-            window.history.replaceState(input, null, input.href);
-        }
-        else {
-            window.history.pushState(input, null, input.href);
-        }
-
-        // If we have a location hash then scroll to it
-        //  otherwise scroll to the top
-        if (input.hash.length) {
-            document.getElementById(input.hash.replace('#', '')).scrollIntoView(true);
-        }
-        else {
-            document.getElementsByTagName("main")[0].scrollTop = 0;
-        }
+        // Scroll to where the user was last on this marked up page
+        $('main').scrollTop(markupStates[input.href].scrollTop);
+        currentUrl = input.href;
     }
 
     // User clicked back/forward buttons on browser bar
     window.onpopstate = function (event) {
         if (event.state) {
-            // Markup using the state information pushed onto history
+            markupStates[currentUrl].scrollTop = $('main').scrollTop();
             markupcode.source(
                     event.state.qstring + event.state.hash,
                     event.state.domelement,
-                    event.state.options,
-                    updateBrowser
-            );
+                    markupStates[event.state.href].options,
+                    updateBrowser);
         }
     };
 </script>
