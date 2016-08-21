@@ -22,7 +22,8 @@
     // Regex that gets the extension from a filename
     var extPattern = /\.([0-9a-z]+)(?:[\?#]|$)/i;
 
-    var source = function (qstring, domelement, options, callback) {
+
+    function source(qstring, domelement, options, callback) {
 
         aHyperlink.href = qstring;
         var href = aHyperlink.href;
@@ -43,14 +44,17 @@
             if (xmlhttp.readyState == XMLHttpRequest.DONE) {
                 if (xmlhttp.status == 200) {
                     ns.markup(xmlhttp.responseText.split('\n'), domelement, extension[1], options, function (err, output) {
+                        if (hash) {
+                            document.getElementById(hash.replace('#', '')).scrollIntoView(true);
+                        }
                         var input = {
                             href: href,
                             qstring: aHyperlink.search,
                             hash: hash,
                             domelement: domelement,
-                            options: output.options
+                            options: output.options,
+                            scrollTop: document.getElementById(domelement.replace('#', '')).parentNode.scrollTop
                         };
-                        console.log(input);
                         if (callback) callback(err, input, output);
                     })
                 }
@@ -61,7 +65,7 @@
         };
         xmlhttp.open('GET', codeUrl, true);
         xmlhttp.send();
-    };
+    }
 
     // Returns the querystring from a element href
     function getQueryParameters(hyperlink) {
@@ -70,6 +74,14 @@
             .map(function (n) {
                 return n = n.split("="), this[n[0]] = n[1], this
             }.bind({}))[0];
+    }
+
+    // Handle browser history
+    function history(state, callback) {
+        source(state.qstring, state.domelement, state.options, function (err, input, output) {
+            input.scrollTop = state.scrollTop;
+            if (callback) callback(err, input, output);
+        })
     }
 
     // Add to namespace
