@@ -81,7 +81,7 @@ markdown documentation. The site is designed with GitHub gh-pages in mind.
 
     $(document).ready(function () {
         // Show logo
-        $('#logo').html(markupcode.image(markupcode.img.logo, '20px', '0 0 0 4px'));
+        $('#logo').html(markupcode.hbars.image(markupcode.img.logo, '20px', '0 0 0 4px'));
 
         // First page to display in #content
         if (window.location.href.indexOf('?') > -1) {
@@ -164,10 +164,18 @@ markdown documentation. The site is designed with GitHub gh-pages in mind.
     function updateBrowser(err, input, output) {
         // Add page to history
         if (typeof markupStates[input.href] === 'undefined') {
-            markupStates[input.href] = {href: input.href, scrollTop: input.scrollTop};
             window.history.pushState(input, null, input.href);
         }
-        markupStates[input.href].options = input.options;
+        else {
+            // Use scrollTop from user's last scroll mark
+            input.scrollTop = markupStates[input.href].scrollTop;
+        }
+
+        markupStates[input.href] = {
+            href: input.href,
+            scrollTop: input.scrollTop,
+            options: input.options
+        };
 
         // Change name on the menu header
         $('#sourcename').html(input.qstring.match(/=([^#]*)/)[1]);
@@ -199,6 +207,11 @@ markdown documentation. The site is designed with GitHub gh-pages in mind.
 </script>
 
 <!--- ### Images used when marking up source files --->
+<!---
+The image objects are used by the HandleBars `image` Helper function.
+ See [HandleBars Helpers](?markup=../src/hbarhelpers.js)
+ --->
+
 <script>
 
     markupcode.img = {
@@ -237,7 +250,9 @@ markdown documentation. The site is designed with GitHub gh-pages in mind.
             src: '//res.cloudinary.com/potofcoffee2go/image/upload/gh/redbacteria.svg',
             href: '//openclipart.org/detail/162835/funny-red-bacteria',
             style: 'float:right;'
-        }
+        },
+        tinyredbacteria: '<img src="//res.cloudinary.com/potofcoffee2go/image/upload/gh/redbacteria.svg"' +
+        ' style="width: 24px;height: 24px;vertical-align: middle;">'
     };
 </script>
 
