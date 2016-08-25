@@ -108,8 +108,10 @@ blockquote > :last-child {
 }
 
 /**
-    #### Dropdown Menu - simple example from [w3schools.com](//www.w3schools.com/css/css_dropdowns.asp)
-    Athough, index.html has the show and hiding logic for more control
+    #### Dropdown Menu
+    Embellishment from [w3schools.com](//www.w3schools.com/css/css_dropdowns.asp) example.
+
+    > I know... w3schools {{{img.tinyredbacteria}}}, but every now and then a blind monkey gets a banana
 */
 .dropbtn {
     background-color: black;

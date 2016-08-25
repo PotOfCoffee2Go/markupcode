@@ -4,7 +4,7 @@
  Handlebars.
 
  Handlebars example
-**\{\{\{ image img.pretty_pic '80px' '0 0 0 10px' \}\}\}**
+ **\{\{\{ image img.pretty_pic '80px' '0 0 0 10px' \}\}\}**
 
  `img.pretty_pic` is object with the following fields :
  <pre><samp>
@@ -75,7 +75,7 @@
      is the image width :
      \{\{\{ image-inline '80px' \}\}\}
      */
-    function imageInline (pic, width) {
+    function imageInline(pic, width) {
         if (pic == null) return '';
         var src = pic.src;
         var ref = pic.href;
@@ -88,14 +88,16 @@
     }
 
     /// Register the helpers with Handlebars
-    Handlebars.registerHelper('image', function (pic, width, margin){
+    Handlebars.registerHelper('image', function (pic, width, margin) {
         return new Handlebars.SafeString(image(pic, width, margin));
     });
-    Handlebars.registerHelper('image-inline', function (pic, width){
+    Handlebars.registerHelper('image-inline', function (pic, width) {
         return new Handlebars.SafeString(imageInline(pic, width));
     });
 
-    /// Assign functions to the namespace so can be used by javascript
-    ns.image = image;
-    ns.imageInline = imageInline;
+    /// Assign functions to the namespace so can also be used by javascript
+    ns.hbars = {
+        image: image,
+        imageInline: imageInline
+    };
 })(poc2go.markup);

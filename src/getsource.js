@@ -44,17 +44,18 @@
             if (xmlhttp.readyState == XMLHttpRequest.DONE) {
                 if (xmlhttp.status == 200) {
                     ns.markup(xmlhttp.responseText.split('\n'), domelement, extension[1], options, function (err, output) {
-                        if (hash) {
-                            document.getElementById(hash.replace('#', '')).scrollIntoView(true);
-                        }
                         var input = {
                             href: href,
                             qstring: aHyperlink.search,
                             hash: hash,
                             domelement: domelement,
                             options: output.options,
-                            scrollTop: document.getElementById(domelement.replace('#', '')).parentNode.scrollTop
+                            scrollTop: 0
                         };
+                        if (hash) {
+                            document.getElementById(hash.replace('#', '')).scrollIntoView(true);
+                            input.scrollTop = document.getElementById(domelement.replace('#', '')).parentNode.scrollTop;
+                        }
                         if (callback) callback(err, input, output);
                     })
                 }
