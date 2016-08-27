@@ -18,14 +18,17 @@ markdown documentation. The site is designed with GitHub gh-pages in mind.
     <!--- ### Site layout, styles, and dropdown menu --->
     <link rel="stylesheet" href="layout.css">
 
-    <!--- ### Code highlight style & script --->
-    <!--- The `github` highlight style is being used.
-    See [highlight.js demo](https://highlightjs.org/static/demo/) for names of other styles.<br />
-    Remove the link and script if code highlighting is not desired. --->
-    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.5.0/styles/github.min.css">
+    <!--- ### Code highlight style & script
+    The `Foundation` highlight style is being used as a default.
+
+    See [highlight.js demo](https://highlightjs.org/static/demo/)
+    for names of other styles.
+    --->
+    <link id="hl-sheet" rel="stylesheet"
+          href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.5.0/styles/foundation.min.css">
     <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.5.0/highlight.min.js"></script>
 
-    <!--- ### The code markup library --->
+    <!--- ### The markup code library --->
     <script src="//cdnjs.cloudflare.com/ajax/libs/marked/0.3.5/marked.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.5/handlebars.min.js"></script>
 
@@ -67,7 +70,20 @@ markdown documentation. The site is designed with GitHub gh-pages in mind.
         <button onclick="return codeOnly();">code only</button>
         <button onclick="return markupOnly();">markup only</button>
         <button onclick="return markedup();">marked up</button>
+
+        <!--- Dropdown of some code highlighters --->
+        <div id="hl-menu" style="float:right;">
+            <select id="hl-option">
+                <option value="foundation.min.css">Foundation</option>
+                <option value="github.min.css">Github</option>
+                <option value="docco.min.css">Docco</option>
+                <option value="pojoaque.min.css">Pojoaque</option>
+                <option value="hopscotch.min.css">Hopscotch</option>
+                <option value="tomorrow-night.min.css">Tomorrow Night</option>
+            </select>
+        </div>
     </div>
+
 </header>
 
 <!--- ### Marked up code files will display in the `#content` div --->
@@ -115,6 +131,17 @@ markdown documentation. The site is designed with GitHub gh-pages in mind.
             // this.target = '_blank';
             return true;
         });
+
+        // Event handler for selecting a code highlighter
+        $('#hl-option').on('change', function (event) {
+            var sheets = '//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.5.0/styles/';
+            var sheet = sheets + event.target.value;
+            $('#content').fadeOut( 300, function() {
+                $('#hl-sheet').remove();
+                $('head').append('<link id="hl-sheet" href="' + sheet + '" rel="stylesheet" />');
+                $('#content').fadeIn(300);
+            } );
+        })
     });
 </script>
 
