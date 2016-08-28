@@ -21,7 +21,6 @@ body {
     display: flex;
     flex-direction: column;
 }
-
 /**
 #### Header, main, and footer
 */
@@ -112,9 +111,9 @@ blockquote > :last-child {
 
 /**
     #### Dropdown Menu
-    Embellishment from [w3schools.com](//www.w3schools.com/css/css_dropdowns.asp) example.
+    Embellishment of [w3schools.com](//www.w3schools.com/css/css_dropdowns.asp) example.
 
-    > I know... w3schools {{{img.tinyredbacteria}}}, but every now and then a blind monkey gets a banana
+    > I know... w3schools {{{img.tinyredbacteria}}}, but every now even a blind monkey finds a banana
 */
 .dropbtn {
     background-color: black;
@@ -149,14 +148,12 @@ blockquote > :last-child {
     display: block;
 }
 
-.dropdown-content a:hover {
-    background-color: #b6d4f1
-}
+.dropdown-content a:hover {background-color: #f1f1f1}
 
 .dropdown:hover .dropdown-content {
     display: block;
 }
 .dropdown:hover .dropbtn {
-    background-color: #46648e;
+    background-color: #3e8e41;
 }
 
