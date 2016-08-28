@@ -2,11 +2,12 @@
 
 This directory is used for local testing of the markdowncode source files.
 
-index.html is the same as the index.html in the gh-pages branch except
+index.html redirects to markupcode.html. Markupcode.html is the same as
+the markupcode.html in the gh-pages branch except
 the markupcode library source is loaded from the `src` directory instead
-of getting markupcode.min.js from the jsdelivr CDN.
+of getting markupcode.min.js from the CDN.
 
-layout.css is the same except the header background color is pink instead
+markupcode.css is the same except the header background color is pink instead
 of blue.
 
 #### To test:

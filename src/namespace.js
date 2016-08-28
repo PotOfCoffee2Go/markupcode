@@ -61,7 +61,7 @@
 
     /// ### Check for [highlightjs](//highlightjs.org/) namespace,
     ///   which (if code highlighting desired) is normally loaded by
-    ///   index.html <head> section along with the preferred code highlighter
+    ///   home page <head> section along with the preferred code highlighter
     /// If found tell marked to highlight the code blocks with it
     if (hljs) {
         marked.setOptions({
