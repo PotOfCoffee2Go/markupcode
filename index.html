@@ -15,8 +15,12 @@ markdown documentation. The site is designed with GitHub gh-pages in mind.
     --->
     <script src="//code.jquery.com/jquery-latest.min.js"></script>
 
+    <!--- ### Markdown theme --->
+    <link id="theme-sheet" rel="stylesheet"
+          href="//cdn.rawgit.com/jasonm23/markdown-css-themes/gh-pages/markdown-alt.css">
+
     <!--- ### Site layout, styles, and dropdown menu --->
-    <link rel="stylesheet" href="layout.css">
+    <link id="layout-sheet" rel="stylesheet" href="layout.css">
 
     <!--- ### Code highlight style & script
     The `Foundation` highlight style is being used as a default.
@@ -46,7 +50,7 @@ markdown documentation. The site is designed with GitHub gh-pages in mind.
             <a href="?markup=doc/credits.md">credits.md</a>
             <div style="background-color: lightgray;text-align: center;">Site Code</div>
             <a href="?markup=index.html">index.html</a>
-            <a href="?markup=layout.css#line-numbers">layout.css</a>
+            <a href="?markup=layout.css">layout.css</a>
             <div style="background-color: lightgray;text-align: center;">Markup Code</div>
             <a href="?markup=../src/namespace.js">namespace.js</a>
             <a href="?markup=../src/hbarhelpers.js">hbarhelpers.js</a>
@@ -57,14 +61,19 @@ markdown documentation. The site is designed with GitHub gh-pages in mind.
         </div>
     </div>
     <!--- Buttons that show when code file displayed - not shown for markdown files --->
-    <div class="top-buttons">
-        <button onclick="return raw();">raw</button>
-        <button onclick="return codeOnly();">code only</button>
-        <button onclick="return markupOnly();">markup only</button>
-        <button onclick="return markedup();">marked up</button>
+    <div>
+        <div class="top-buttons" style="display: inline-block;">
+            <button onclick="return raw();">raw</button>
+            <button onclick="return codeOnly();">code only</button>
+            <button onclick="return markupOnly();">markup only</button>
+            <button onclick="return markedUp();">marked up</button>
+        </div>
 
-        <!--- Dropdown of some code highlighters --->
-        <div id="hl-menu" style="float:right;">
+        <!--- Dropdown of some code highlighters.
+        See [highlightjs source](view-source:https://highlightjs.org/static/demo/)
+        for more of them.
+        --->
+        <div id="hl-menu" style="float:right; margin:0 16px 0 0;">
             <select id="hl-option">
                 <option value="foundation.min.css">Foundation</option>
                 <option value="github.min.css">Github</option>
@@ -72,8 +81,61 @@ markdown documentation. The site is designed with GitHub gh-pages in mind.
                 <option value="pojoaque.min.css">Pojoaque</option>
                 <option value="hopscotch.min.css">Hopscotch</option>
                 <option value="tomorrow-night.min.css">Tomorrow Night</option>
+                <option value="brown-paper.min.css">Brown Paper</option>
+                <option value="codepen-embed.min.css">Codepen Embed</option>
+                <option value="color-brewer.min.css">Color Brewer</option>
+                <option value="darcula.min.css">Darcula</option>
+                <option value="dark.min.css">Dark</option>
+                <option value="darkula.min.css">Darkula</option>
+                <option value="dracula.min.css">Dracula</option>
+                <option value="far.min.css">Far</option>
+                <option value="github-gist.min.css">Github Gist</option>
+                <option value="googlecode.min.css">Googlecode</option>
+                <option value="grayscale.min.css">Grayscale</option>
+                <option value="gruvbox-dark.min.css">Gruvbox Dark</option>
+                <option value="gruvbox-light.min.css">Gruvbox Light</option>
+                <option value="hybrid.min.css">Hybrid</option>
+                <option value="idea.min.css">Idea</option>
+                <option value="ir-black.min.css">Ir Black</option>
+                <option value="kimbie.dark.min.css">Kimbie Dark</option>
+                <option value="kimbie.light.min.css">Kimbie Light</option>
+                <option value="magula.min.css">Magula</option>
+                <option value="mono-blue.min.css">Mono Blue</option>
+                <option value="monokai-sublime.min.css">Monokai Sublime</option>
+                <option value="monokai.min.css">Monokai</option>
+                <option value="obsidian.min.css">Obsidian</option>
+                <option value="ocean.min.css">Ocean</option>
+                <option value="paraiso-dark.min.css">Paraiso Dark</option>
+                <option value="paraiso-light.min.css">Paraiso Light</option>
+                <option value="purebasic.min.css">Purebasic</option>
+                <option value="qtcreator-dark.min.css">Qtcreator Dark</option>
+                <option value="qtcreator-light.min.css">Qtcreator Light</option>
+                <option value="railscasts.min.css">Railscasts</option>
+                <option value="rainbow.min.css">Rainbow</option>
+                <option value="school-book.min.css">School Book</option>
+                <option value="solarized-dark.min.css">Solarized Dark</option>
+                <option value="solarized-light.min.css">Solarized Light</option>
             </select>
         </div>
+
+        <!--- Dropdown of some themes --->
+        <div id="theme-menu" style="float:right; margin:0 16px 0 0;">
+            <select id="theme-option">
+                <option value="markdown-alt.css">Markdown-alt</option>
+                <option value="markdown10.css">Markdown10</option>
+                <option value="markdown.css">Markdown</option>
+                <option value="markdown1.css">Markdown1</option>
+                <option value="markdown2.css">Markdown2</option>
+                <option value="markdown3.css">Markdown3</option>
+                <option value="markdown4.css">Markdown4</option>
+                <option value="markdown5.css">Markdown5</option>
+                <option value="markdown7.css">Markdown7</option>
+                <option value="screen.css">Screen</option>
+                <option value="swiss.css">Swiss</option>
+                <option value="foghorn.css">Foghorn</option>
+            </select>
+        </div>
+
     </div>
 
 </header>
@@ -124,42 +186,36 @@ markdown documentation. The site is designed with GitHub gh-pages in mind.
             return true;
         });
 
+        // Event handler for selecting theme
+        $('#theme-option').on('change', function (event) {
+            var sheets = '//cdn.rawgit.com/jasonm23/markdown-css-themes/gh-pages/';
+            var sheet = sheets + event.target.value;
+            $('#theme-sheet').attr('href', sheet);
+            $('#layout-sheet').attr('href', 'layout.css');
+        });
+
         // Event handler for selecting a code highlighter
         $('#hl-option').on('change', function (event) {
             var sheets = '//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.5.0/styles/';
             var sheet = sheets + event.target.value;
-            $('#content').fadeOut( 300, function() {
-                $('#hl-sheet').remove();
-                $('head').append('<link id="hl-sheet" href="' + sheet + '" rel="stylesheet" />');
-                $('#content').fadeIn(300);
-            } );
-        })
-    });
-</script>
+            $('#hl-sheet').attr('href', sheet);
+            /*
+             $('#content').fadeOut(300, function () {
+             $('#hl-sheet').remove();
+             $('head').append('<link id="hl-sheet" href="' + sheet + '" rel="stylesheet" />');
+             $('#content').fadeIn(300);
+             });
+             */
+        });
 
-<!--- ### Function to process menu clicks -->
-<script>
-    // Keep track of the state of each markup code page
-    var currentUrl = window.location.href;
-    var markupStates = {};
-    markupStates[currentUrl] = {href: window.location.href, scrollTop: 0};
-
-    // File we are displaying in the #content
-    var currentPage;
-
-    // Remember the where the user scrolled
-    // Markup the source file into the #content div
-    // Remember the current url (for use by the top buttons in the header)
-    function markup(url) {
-        markupStates[currentUrl].scrollTop = $('main').scrollTop();
-        markupcode.source(url, '#content', {}, updateBrowser);
-        currentPage = url;
-        return false;
-    }
+    })
 </script>
 
 <!--- ### Functions to process top button clicks -->
 <script>
+    // File we are displaying in the #content
+    var currentPage;
+
     // Clicked for raw display of the current source file
     function raw() {
         markupcode.source(currentPage, '#content', {raw: true}, updateBrowser);
@@ -179,16 +235,34 @@ markdown documentation. The site is designed with GitHub gh-pages in mind.
     }
 
     // Clicked for default display of the current source file
-    function markedup() {
+    function markedUp() {
         markupcode.source(currentPage, '#content', {}, updateBrowser);
         return false;
     }
 </script>
 
+<!--- ### Function to process menu clicks -->
 <script>
-    /// ### Update browser and marked up page states
+    // Keep track of the state of each markup code page
+    var currentUrl = window.location.href;
+    var markupStates = {};
+    markupStates[currentUrl] = {href: window.location.href, options: {}, scrollTop: 0};
+
+    // Remember the where the user scrolled
+    // Markup the source file into the #content div
+    // Remember the current url (for use by the top buttons in the header)
+    function markup(url) {
+        markupStates[currentUrl].scrollTop = $('main').scrollTop();
+        markupcode.source(url, '#content', {}, updateBrowser);
+        currentPage = url;
+        return false;
+    }
+</script>
+
+<!--- ### Update browser and marked up page states --->
+<script>
     function updateBrowser(err, input, output) {
-        // Add page to history
+        // Add new page to browser history
         if (typeof markupStates[input.href] === 'undefined') {
             window.history.pushState(input, null, input.href);
         }
@@ -197,13 +271,14 @@ markdown documentation. The site is designed with GitHub gh-pages in mind.
             input.scrollTop = markupStates[input.href].scrollTop;
         }
 
+        // Remember the current page state
         markupStates[input.href] = {
             href: input.href,
             scrollTop: input.scrollTop,
             options: input.options
         };
 
-        // Change name on the menu header
+        // Change name of file being viewed on the menu header
         $('#sourcename').html(input.qstring.match(/=([^#]*)/)[1]);
         document.title = input.qstring.match(/=([^#]*)/)[1];
 
@@ -214,15 +289,20 @@ markdown documentation. The site is designed with GitHub gh-pages in mind.
         else {
             $('.top-buttons').show();
         }
+
         // Scroll to where the user was last on this marked up page
         $('main').scrollTop(markupStates[input.href].scrollTop);
+
+        // This is the current url being displayed
         currentUrl = input.href;
     }
 
     // User clicked back/forward buttons on browser bar
     window.onpopstate = function (event) {
         if (event.state) {
+            // Remember the scroll position of the current page
             markupStates[currentUrl].scrollTop = $('main').scrollTop();
+            // Change content to the page stored in browser history
             markupcode.source(
                     event.state.qstring + event.state.hash,
                     event.state.domelement,
