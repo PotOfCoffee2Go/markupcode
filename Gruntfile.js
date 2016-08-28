@@ -12,7 +12,6 @@ module.exports = function (grunt) {
     grunt.initConfig({
         config: config,
         pkg: config.pkg,
-        bower: grunt.file.readJSON('./.bowerrc'),
 
         uglify: {
             options: {
@@ -21,9 +20,7 @@ module.exports = function (grunt) {
             },
             dist: {
                 files: {
-                    '<%= config.dist %>/js/<%= pkg.name %>.min.js': [
-                        '<%= bower.directory %>/handlebars/handlebars.js',
-                        '<%= bower.directory %>/marked/lib/marked.js',
+                    '<%= config.dist %>/<%= pkg.version %>/<%= pkg.name %>.min.js': [
                         'src/namespace.js',
                         'src/hbarhelpers.js',
                         'src/linenumbers.js',

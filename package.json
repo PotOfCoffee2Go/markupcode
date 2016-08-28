@@ -1,6 +1,6 @@
 {
   "name": "markupcode",
-  "version": "1.0.0",
+  "version": "0.5.0",
   "description": "Parses Markdown comments from Javascript, stylesheets, and HTML files creating text suitable for processing by Markdown",
   "main": "Gruntfile.js",
   "scripts": {
